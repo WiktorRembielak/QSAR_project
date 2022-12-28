@@ -13,7 +13,7 @@ from a chemical structure in SMILES format with chemical software.
 
 
 class Dataset:
-    def __init__(self, path, index_col=None):
+    def __init__(self, path: str, index_col=None):
         self.dataset = Dataset.load_dataset(path, index_col)
         # Attribute descriptors have defined column names of molecular descriptors that need to be present in a dataset
         self.descriptors = ['nHM', 'piPC09', 'X2Av', 'MLOGP', 'ON1V', 'N-072',
@@ -40,7 +40,7 @@ class Dataset:
     def split_data(self, class_column: str, reg_column: str,
                    classification: bool = False, regression: bool = False,
                    test_size: float = 0., val_size: float = 0.,
-                   random_state=42):
+                   random_state: int = 42):
         # Method spliting the dataset either to features subset (X) and class labels / dependent variables subset (y)
         # or training, validation and test subsets.
 
@@ -71,7 +71,7 @@ class Dataset:
                                                                       random_state=random_state,
                                                                       stratify=stratify)
 
-    def remove_outliers(self, num_of_std=3):
+    def remove_outliers(self, num_of_std: int = 3):
         # Perform before scaling
 
         # Cuts out every row containing a data point higher or lower than specified multiple
@@ -91,7 +91,7 @@ class Dataset:
         self.y = subset.pop(self.y.name)
         self.X = subset
 
-    def scale(self, standard=False, minmax=False):
+    def scale(self, standard: bool = False, minmax: bool = False):
         # If user wants to remove outliers, it should be performed before scaling
 
         # Standarization or normalization of columns with floating point values
