@@ -1,0 +1,22 @@
+etl:
+ raw_data: data/Grisoni_et_al_2016_EnvInt88.csv
+ classification: True
+ regression: False
+ class_column: Class
+ reg_column: logBCF
+ columns_to_drop: ['Set']
+ test_size: 0.2
+ val_size: 0
+ remove_outliers: True
+ scale_standarization: True
+ scale_minamx: False
+ resample: True
+ adjust_shape: True
+
+train:
+ processed_data_version: recent
+ l1: 0.00000001
+ l2: 0.00000001
+ dropout: 0.45
+ batchSize: 10
+ epochs: 300
