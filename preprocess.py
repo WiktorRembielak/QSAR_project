@@ -26,6 +26,7 @@ class Dataset:
         self.y = None
         self.y_test = None
         self.y_val = None
+        self.subsets = ('X', 'X_test', 'X_val', 'y', 'y_test', 'y_val')
 
     def check_descriptors_completeness(self):
         if [desc for desc in self.descriptors if desc not in self.dataset.columns]:
@@ -41,11 +42,11 @@ class Dataset:
                    classification: bool = False, regression: bool = False,
                    test_size: float = 0., val_size: float = 0.,
                    random_state: int = 42):
-        # Method spliting the dataset either to features subset (X) and class labels / dependent variables subset (y)
+        # Method splitting the dataset either to features subset (X) and class labels / dependent variables subset (y)
         # or training, validation and test subsets.
 
-        # Changes values of self.X, self.y.
-        # Optionaly changes values of self.X_test, self.y_test, self.X_val, self.y_val.
+        # Changes values of self.X, self.y
+        # Optionaly changes values of self.X_test, self.y_test, self.X_val, self.y_val
 
         if classification == regression:
             print('Choose only classification or only regression')
@@ -134,4 +135,4 @@ class Dataset:
         # Changing shape of class labels column to format required in sequential model
         self.y = np.array(self.y).reshape(-1, 1)
         enc = OneHotEncoder()
-        self.y = enc.fit_transform(self.y).toarray()
+        self.y = pd.DataFrame(enc.fit_transform(self.y).toarray())
