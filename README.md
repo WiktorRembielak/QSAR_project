@@ -15,7 +15,8 @@ classification trees"
 <p><b>Bioconcentration</b> is the intake and retention of a substance in an organism entirely by respiration from water in aquatic ecosystems or from air in terrestrial ones. This property may be used for assessment of environmental safety of potentially dangerous chemicals.</p>
 
 <h2>Dataset</h2>
-The dataset consists of 779 records, each representing one chemical compund. Every record is identified with CAS registry number and chemical structure in SMILES format
+The dataset consists of 779 records, each representing one chemical compund. Every record is described with CAS registry number, chemical structure in SMILES format and 9 molecular descriptors. The compounds were also labeled with class number (1-3), logBCF (dependent value for regression problem) and assignment to test or train subset.
+The dataset was created by F. Grisoni et al. The molecular descriptors were calculated directly from chemical structure in SMILES format using Dragon software. The compounds were assigned to bioconcentration classes by the authors on the basis of wet weight BCF data and the TGD (Technical Guidance Document) model.
 
 <h2>Molecular descriptors</h2>
 
