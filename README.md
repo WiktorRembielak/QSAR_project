@@ -45,13 +45,13 @@ Script containing Dataset class definition. Objects of Dataset type have data lo
 
 - ```check_descriptors_completeness```
 
-  Checks if all molecular descriptors needed for model training and testing are present in dataset (as defined in self.descriptors attribute)
+  Checks if all molecular descriptors needed for model training and testing are present in dataset (as defined in self.descriptors attribute).
 
 - ```split_data```
 
   Method splitting dataset either to:
   - features subset (self.X) and class labels or dependent variables subset (self.y)
-  - training, validation and test subsets
+  - training, validation and test subsets.
   
   User needs to specify class labels column (_class_column_ parameter) and dependent variables (_reg_column_ parameter) and whether the dataset is being splitted for classification or linear regression model.
   
@@ -71,17 +71,21 @@ Script containing Dataset class definition. Objects of Dataset type have data lo
 
 - ```adjust_shape```
 
-
+  Changing shape of class labels column to format required in sequential model.
+ 
 #### **tools.py**
+This script is a place for functions that don't take part in ETL process
 
 #### config.yaml
+Configuration file for ETL and model training parameters
 
 
 ### Executable scripts
 #### etl.py
+The script contains a function which loads raw data, splits, processes and exports it
 
 #### train.py
-
+Defining sequential model architecture, compiling, training and exporting created model.
 
 
 
