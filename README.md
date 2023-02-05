@@ -10,13 +10,14 @@ This project was based on a 2016 paper by F. Grisoni et al. "Investigating the m
 classification trees".[^1]
 
 ## Background
-**QSAR (quantitative structure–activity relationship) modeling** is an _in silico_ approach of examination of biological properties of compunds. QSAR models base on theoretical parameters called <b>molecular descriptors</b> that can be calculated directly from chemical structures of given molecules. Therefore this method may be used to evaluate properties of a chemical compund without the need of synthesising it in a lab or collecting from nature or even predict properties of theoretical chemical structures that have never existed before. All these features make QSAR models less costly and time-consuming alternatives to experiments on cell lines or animals in the fields like toxicity assessments of chemicals or drug discovery.
+**QSAR (quantitative structure–activity relationship) modeling** is an _in silico_ approach of examination of biological properties of chemical compunds. QSAR models base on theoretical parameters called <b>molecular descriptors</b> that can be calculated directly from chemical structures of given molecules. Therefore this approach may be used to evaluate properties of a chemical compund without the need of synthesising it in a lab or collecting from nature or even predict properties of theoretical chemical structures that have never existed before. All these features make QSAR models less costly and time-consuming alternatives to experiments on cell lines or animals in the fields like toxicity assessments of chemicals or drug discovery.
 
 **Bioconcentration** is the intake and retention of a substance in an organism entirely by respiration from water in aquatic ecosystems or from air in terrestrial ones. This property may be used for assessment of environmental safety of potentially dangerous chemicals.
 
 ## Dataset
-The dataset consists of 779 records, each representing one chemical compund. Every record is identified with CAS registry number and descried with chemical structure in SMILES format and 9 molecular descriptors. The compounds were also labeled with class number (1-3), logBCF (dependent value for regression problem) and assignment to test or train subset.
-The dataset was created by F. Grisoni et al. Compounds were assigned to bioconcentration classes by the authors on the basis of wet weight BCF data and the TGD (Technical Guidance Document) model.
+The dataset was created by F. Grisoni et al. and attached to the 2016 paper[^1] as supplementary data.
+
+The dataset consists of 779 records, each representing one chemical compund. Every record is identified with CAS registry number and described with chemical structure in SMILES format, 9 molecular descriptors and logBCF (dependent value for regression problem). The compounds were assigned to bioconcentration classes by the authors on the basis of wet weight BCF data and the TGD (Technical Guidance Document) model and labeled with one of class numbers (1-3).
 
 ### Molecular descriptors
 The molecular descriptors were calculated directly from chemical structures in SMILES format using Dragon software. The table below shows names and descriptions of used molecular descriptors.[^2]
@@ -36,18 +37,21 @@ The molecular descriptors were calculated directly from chemical structures in S
 ## Files description
 
 ### Notebook
-#### **data_analysis.ipynb**
-The notebook showing basic dataset information with analysis of class proportion, outliers presence and correlation between features.
+- **data_analysis.ipynb** - The notebook showing basic dataset information with analysis of class proportion, outliers presence and correlation between features.
+
+### Executable scripts
+- **etl.py** - Loading, splitting, processesing and exporting data
+
+- **train.py** - Defining sequential model architecture, compiling, training and exporting created model.
 
 ### Utility files
-#### **preprocess.py**
-Script containing Dataset class definition. Objects of Dataset type have data loaded from a file as _pandas.DataFrame_ and set of methods for data health check and  preprocessing:
+- **preprocess.py** - Script containing Dataset class definition. Objects of Dataset type have data loaded from a file as _pandas.DataFrame_ and set of methods for data health check and  preprocessing:
 
-- ```check_descriptors_completeness```
-
+  ```check_descriptors_completeness```
+  
   Checks if all molecular descriptors needed for model training and testing are present in dataset (as defined in self.descriptors attribute).
-
-- ```split_data```
+  
+  ```split_data```
 
   Method splitting dataset either to:
   - features subset (self.X) and class labels or dependent variables subset (self.y)
@@ -55,37 +59,30 @@ Script containing Dataset class definition. Objects of Dataset type have data lo
   
   User needs to specify class labels column (_class_column_ parameter) and dependent variables (_reg_column_ parameter) and whether the dataset is being splitted for classification or linear regression model.
   
-- ```remove_outliers```
+  ```remove_outliers```
 
   ***Important***: if user wants to perform both removing outliers and scaling, this method should be used first.
 
   Method searches outliers in columns with floating point values and removes records containing them. By default the method recognizes values higher or lower by 3 standard deviations than the mean value as outliers.
-
-- ```scale```
+  
+  ```scale```
 
   Perform standardization or normalization of columns with floating point values as _sklearn.preprocessing.StandardScaler_ object or _sklearn.preprocessing.MinMaxScaler_ object respectively.
-
-- ```resample```
+  
+  ```resample```
 
   Fixing training on imbalanced classes with SMOTE resampling. SMOTE (Synthetic Minority Over-sampling Technique) consists in generating synthetic data to over-sample minority class using k nearest neighbors algorithm.[^3]
-
-- ```adjust_shape```
+  
+  ```adjust_shape```
 
   Changing shape of class labels column to format required in sequential model.
  
-#### **tools.py**
-This script is a place for functions that don't take part in ETL process
+- **tools.py** - This script is a place for functions that don't take part in ETL process
 
-#### config.yaml
-Configuration file for ETL and model training parameters
+- **config.yaml** - ETL and model training parameters adjustment
 
 
-### Executable scripts
-#### etl.py
-The script contains a function which loads raw data, splits, processes and exports it
 
-#### train.py
-Defining sequential model architecture, compiling, training and exporting created model.
 
 
 
