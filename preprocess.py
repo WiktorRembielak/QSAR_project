@@ -15,7 +15,8 @@ from a chemical structure in SMILES format with chemical software.
 class Dataset:
     def __init__(self, path: str, index_col=None):
         self.dataset = Dataset.load_dataset(path, index_col)
-        # Attribute descriptors have defined column names of molecular descriptors that need to be present in a dataset
+        # Attribute self.descriptors have defined column names of molecular descriptors
+        # that need to be present in a dataset
         self.descriptors = ['nHM', 'piPC09', 'X2Av', 'MLOGP', 'ON1V', 'N-072',
                             'PCD', 'B02[C-N]',
                             'F04[C-O]']
@@ -42,8 +43,9 @@ class Dataset:
                    classification: bool = False, regression: bool = False,
                    test_size: float = 0., val_size: float = 0.,
                    random_state: int = 42):
-        # Method splitting the dataset either to features subset (X) and class labels / dependent variables subset (y)
-        # or training, validation and test subsets.
+        # Method splitting the dataset either to:
+        # - features subset (X) and class labels / dependent variables subset (y)
+        # - training, validation and test subsets.
 
         # Changes values of self.X, self.y
         # Optionaly changes values of self.X_test, self.y_test, self.X_val, self.y_val
@@ -75,8 +77,9 @@ class Dataset:
     def remove_outliers(self, num_of_std: int = 3):
         # Perform before scaling
 
-        # Cuts out every row containing a data point higher or lower than specified multiple
-        # of standard deviation value of a feature.
+        # Method searches outliers in columns with floating point values and removes records containing them.
+        # By default the method recognises values higher or lower by 3 standard deviations
+        # than the mean value as outliers.
 
         # Changes values of self.X and self.y (if dependent values are floating points).
 
@@ -132,7 +135,7 @@ class Dataset:
         self.X, self.y = SMOTE().fit_resample(self.X, self.y)
 
     def adjust_shape(self):
-        # Changing shape of class labels column to format required in sequential model
+        # Changing shape of class labels column to format required by sequential model
         self.y = np.array(self.y).reshape(-1, 1)
         enc = OneHotEncoder()
         self.y = pd.DataFrame(enc.fit_transform(self.y).toarray())
