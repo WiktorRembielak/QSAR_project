@@ -84,7 +84,7 @@ class Dataset:
         # Changes values of self.X and self.y (if dependent values are floating points).
 
         subset = pd.concat([self.X, self.y], axis=1)
-        columns = list(col for col in subset.columns if subset[col].dtype == 'float64')
+        columns = list(col for col in subset.columns if subset[col].dtype == 'float')
 
         for col in columns:
             up_limit = subset[col].mean() + subset[col].std() * num_of_std
@@ -112,7 +112,7 @@ class Dataset:
             scaler = MinMaxScaler(feature_range=(0, 1))
             scaling = 'Normalization'
 
-        columns = list(col for col in self.X.columns if self.X[col].dtype == 'float64')
+        columns = list(col for col in self.X.columns if self.X[col].dtype == 'float')
         self.X.loc[:, columns] = scaler.fit_transform(self.X.loc[:, columns])
         if self.X_test is not None:
             self.X_test.loc[:, columns] = scaler.fit_transform(self.X_test.loc[:, columns])
