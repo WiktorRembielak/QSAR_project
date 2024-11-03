@@ -34,66 +34,6 @@ The molecular descriptors were calculated directly from chemical structures in S
 |B02[C-N]   | Presence/absence of C - N at topological distance 2                |
 |F04[C-O]   | Frequency of C - O at topological distance 4                       |
 
-## Files description
-
-### Notebook
-- **data_analysis.ipynb** - The notebook showing basic dataset information with analysis of class proportion, outliers presence and correlation between features.
-
-### Executable scripts
-- **etl.py** - Loading, splitting, processesing and exporting data
-
-- **train.py** - Defining sequential model architecture, compiling, training and exporting created model.
-
-### Utility files
-- **preprocess.py** - Script containing Dataset class definition. Objects of Dataset type have data loaded from a file as _pandas.DataFrame_ and set of methods for data health check and  preprocessing:
-
-  ```check_descriptors_completeness```
-  
-  Checks if all molecular descriptors needed for model training and testing are present in dataset (as defined in self.descriptors attribute).
-  
-  ```split_data```
-
-  Method splitting dataset either to:
-  - features subset (self.X) and class labels or dependent variables subset (self.y)
-  - training, validation and test subsets.
-  
-  User needs to specify class labels column (_class_column_ parameter) and dependent variables (_reg_column_ parameter) and whether the dataset is being splitted for classification or linear regression model.
-  
-  ```remove_outliers```
-
-  ***Important***: if user wants to perform both removing outliers and scaling, this method should be used first.
-
-  Method searches outliers in columns with floating point values and removes records containing them. By default the method recognizes values higher or lower by 3 standard deviations than the mean value as outliers.
-  
-  ```scale```
-
-  Perform standardization or normalization of columns with floating point values as _sklearn.preprocessing.StandardScaler_ object or _sklearn.preprocessing.MinMaxScaler_ object respectively.
-  
-  ```resample```
-
-  Fixing training on imbalanced classes with SMOTE resampling. SMOTE (Synthetic Minority Over-sampling Technique) consists in generating synthetic data to over-sample minority class using k nearest neighbors algorithm.[^3]
-  
-  ```adjust_shape```
-
-  Changing shape of class labels column to format required in sequential model.
- 
-- **tools.py** - This script is a place for functions that don't take part in ETL process
-
-- **config.yaml** - ETL and model training parameters adjustment
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### References
 [^1]: Grisoni F., Consonni V., Vighi M., Villa S., Todeschini R. Investigating the mechanisms of bioconcentration through QSAR classification trees. Environ. Int. 2016;88:198–205. [DOI](https://doi.org/10.1016/j.envint.2015.12.024) - [PubMed](https://pubmed.ncbi.nlm.nih.gov/26760717/)
 [^2]: [List of molecular descriptors calculated by Dragon software](http://talete.mi.it/products/dragon_molecular_descriptor_list.pdf)

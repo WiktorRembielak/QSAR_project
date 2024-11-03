@@ -13,8 +13,12 @@ from a chemical structure in SMILES format with chemical software.
 
 
 class Dataset:
-    def __init__(self, path: str, index_col=None):
-        self.dataset = Dataset.load_dataset(path, index_col)
+    def __init__(
+            self,
+            path: str,
+            index_col=None):
+        
+        self.raw = self.load_dataset(path, index_col)
         # Attribute self.descriptors have defined column names of molecular descriptors
         # that need to be present in a dataset
         self.descriptors = ['nHM', 'piPC09', 'X2Av', 'MLOGP', 'ON1V', 'N-072',
@@ -29,20 +33,29 @@ class Dataset:
         self.y_val = None
         self.subsets = ('X', 'X_test', 'X_val', 'y', 'y_test', 'y_val')
 
+
     def check_descriptors_completeness(self):
-        if [desc for desc in self.descriptors if desc not in self.dataset.columns]:
+        if [desc for desc in self.descriptors if desc not in self.raw.columns]:
             print(f'The dataset has to contain all the needed molecular descriptors with column names in format:\
             \n{self.descriptors}')
             raise Exception(f"descriptor(s) missing")
+
 
     @staticmethod
     def load_dataset(path, index_col):
         return pd.read_csv(path, index_col=index_col)
 
-    def split_data(self, class_column: str, reg_column: str,
-                   classification: bool = False, regression: bool = False,
-                   test_size: float = 0., val_size: float = 0.,
-                   random_state: int = 42):
+
+    def split_data(
+            self,
+            class_column: str,
+            reg_column: str,
+            classification: bool = False,
+            regression: bool = False,
+            test_size: float = 0.,
+            val_size: float = 0.,
+            random_state: int = 42):
+        
         # Method splitting the dataset either to:
         # - features subset (X) and class labels / dependent variables subset (y)
         # - training, validation and test subsets.
@@ -54,13 +67,13 @@ class Dataset:
             print('Choose only classification or only regression')
             return
 
-        self.X = self.dataset[self.descriptors]
+        self.X = self.raw[self.descriptors]
         if classification:
-            self.y = self.dataset[class_column]
+            self.y = self.raw[class_column]
             stratify = self.y
 
         if regression:
-            self.y = self.dataset[reg_column]
+            self.y = self.raw[reg_column]
             stratify = None
 
         if test_size > 0:
@@ -68,11 +81,13 @@ class Dataset:
                                                                         shuffle=True,
                                                                         random_state=random_state,
                                                                         stratify=stratify)
+            
         if val_size > 0:
             self.X, self.X_val, self.y, self.y_val = train_test_split(self.X, self.y, test_size=val_size,
                                                                       shuffle=True,
                                                                       random_state=random_state,
                                                                       stratify=stratify)
+
 
     def remove_outliers(self, num_of_std: int = 3):
         # Perform before scaling
@@ -95,6 +110,7 @@ class Dataset:
         self.y = subset.pop(self.y.name)
         self.X = subset
 
+
     def scale(self, standard: bool = False, minmax: bool = False):
         # If user wants to remove outliers, it should be performed before scaling
 
@@ -102,8 +118,8 @@ class Dataset:
         # Changes values of self.X and, if it's present in the dataset object, self.X_test
 
         if standard == minmax:
-            print('Scaling failed. Choose only standarization or only normalization')
-            return
+            raise ValueError('Scaling failed. Choose only standarization or only normalization')
+        
         if standard:
             scaler = StandardScaler()
             scaling = 'Standarization'
@@ -130,12 +146,14 @@ class Dataset:
         else:
             print(f'{scaling} failed in columns: {failed}')
 
+
     def resample(self):
         # Fixing training on imbalanced data with SMOTE resampling
         self.X, self.y = SMOTE().fit_resample(self.X, self.y)
 
-    def adjust_shape(self):
-        # Changing shape of class labels column to format required by sequential model
-        self.y = np.array(self.y).reshape(-1, 1)
-        enc = OneHotEncoder()
-        self.y = pd.DataFrame(enc.fit_transform(self.y).toarray())
+
+def adjust_shape(subset):
+    # Changing shape of class labels column to format required by sequential model
+    subset = np.array(subset).reshape(-1, 1)
+    enc = OneHotEncoder()
+    return pd.DataFrame(enc.fit_transform(subset).toarray())
